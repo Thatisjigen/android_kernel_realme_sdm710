@@ -1092,7 +1092,7 @@ static ssize_t tfa98xx_dbgfs_dsp_state_set(struct file *file,
 #endif/*CONFIG_DEBUG_FS*/
     struct tfa98xx *tfa98xx = i2c_get_clientdata(i2c);
     enum Tfa98xx_Error ret;
-    char buf[32];
+    char buf[32] ="";
     const char start_cmd[] = "start";
     const char stop_cmd[] = "stop";
 	#ifndef OPLUS_ARCH_EXTENDS
