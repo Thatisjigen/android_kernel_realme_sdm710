@@ -25,6 +25,8 @@
 #include <linux/posix-timers.h>
 #include <linux/workqueue.h>
 #include <linux/freezer.h>
+#include <linux/delay.h>
+
 
 #ifdef OPLUS_FEATURE_POWERINFO_STANDBY
 #include "../../drivers/soc/oplus/owakelock/oplus_wakelock_profiler_qcom.h"
@@ -458,6 +460,7 @@ int alarm_cancel(struct alarm *alarm)
 		if (ret >= 0)
 			return ret;
 		cpu_relax();
+		ndelay(TIMER_LOCK_TIGHT_LOOP_DELAY_NS);
 	}
 }
 EXPORT_SYMBOL_GPL(alarm_cancel);
