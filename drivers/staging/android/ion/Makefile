@@ -16,3 +16,5 @@ obj-$(CONFIG_ION_MSM) += msm/
 #ifdef VENDOR_EDIT
 obj-y	+= oplus_ion/
 #endif /* VENDOR_EDIT */
+
+CFLAGS_ion_system_heap.o += -Wframe-larger-than=8192
