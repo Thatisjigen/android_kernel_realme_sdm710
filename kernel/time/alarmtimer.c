@@ -290,8 +290,8 @@ static int alarmtimer_suspend(struct device *dev)
 	if (min.tv64 == 0)
 		return 0;
 
-	if (ktime_to_ns(min) < 2 * NSEC_PER_SEC) {
-		__pm_wakeup_event(ws, 2 * MSEC_PER_SEC);
+	if (ktime_to_ns(min) < NSEC_PER_SEC / 2)
+		__pm_wakeup_event(ws, MSEC_PER_SEC / 2);
         #ifdef OPLUS_FEATURE_POWERINFO_STANDBY
         //FanGeqiang@BSP.Power.Basic@BSP.Power.Basic 2020/11/30, add for analysis power coumption. count alarm times
         alarmtimer_suspend_flag_clear();
@@ -299,6 +299,7 @@ static int alarmtimer_suspend(struct device *dev)
         #endif /* OPLUS_FEATURE_POWERINFO_STANDBY */
 		return -EBUSY;
 	}
+
 
 	/* Setup an rtc timer to fire that far in the future */
 	rtc_timer_cancel(rtc, &rtctimer);
