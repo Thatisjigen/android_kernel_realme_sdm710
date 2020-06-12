@@ -534,6 +534,9 @@ static int oppo_shortc_gpio_init(struct oppo_chg_chip *chip)
 	/*chg->fcc_stepper_enable = of_property_read_bool(node,
 					"qcom,fcc-stepping-enable");*/
 
+	chg->ufp_only_mode = of_property_read_bool(node,
+					"qcom,ufp-only-mode");
+
 	return 0;
 }
 
@@ -5351,8 +5354,9 @@ static void smb2_shutdown(struct platform_device *pdev)
 	/* disable all interrupts */
 	smb2_disable_interrupts(chg);
 
-	/* configure power role for UFP */
-	smblib_masked_write(chg, TYPE_C_INTRPT_ENB_SOFTWARE_CTRL_REG,
+	if (!chg->ufp_only_mode)
+		/* configure power role for UFP */
+		smblib_masked_write(chg, TYPE_C_INTRPT_ENB_SOFTWARE_CTRL_REG,
 				TYPEC_POWER_ROLE_CMD_MASK, UFP_EN_CMD_BIT);
 
 	/* force HVDCP to 5V */

@@ -1,4 +1,4 @@
-/* Copyright (c) 2011-2017, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2011-2017, 2019, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -295,12 +295,17 @@ int kgsl_add_event(struct kgsl_device *device, struct kgsl_event_group *group,
 	event->func = func;
 	event->created = jiffies;
 	event->group = group;
+<<<<<<< HEAD
 	//wangyongwu add for qcom patch caseID04113666
 	#ifdef VENDOR_EDIT
 	INIT_WORK(&event->work, _kgsl_event_worker);
 	#else
 	kthread_init_work(&event->work, _kgsl_event_worker);
 	#endif
+=======
+
+	INIT_WORK(&event->work, _kgsl_event_worker);
+>>>>>>> 86c7c5e83f957df7522ba51537fcd38be74ec9f2
 
 	trace_kgsl_register_event(KGSL_CONTEXT_ID(context), timestamp, func);
 
@@ -315,12 +320,16 @@ int kgsl_add_event(struct kgsl_device *device, struct kgsl_event_group *group,
 
 	if (timestamp_cmp(retired, timestamp) >= 0) {
 		event->result = KGSL_EVENT_RETIRED;
+<<<<<<< HEAD
 		//wangyongwu add for qcom patch caseID04113666
 		#ifdef VENDOR_EDIT
 		queue_work(device->events_wq, &event->work);
 		#else
 		kthread_queue_work(&kgsl_driver.worker, &event->work);
 		#endif
+=======
+		queue_work(device->events_wq, &event->work);
+>>>>>>> 86c7c5e83f957df7522ba51537fcd38be74ec9f2
 		spin_unlock(&group->lock);
 		return 0;
 	}
