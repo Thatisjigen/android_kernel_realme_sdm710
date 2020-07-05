@@ -1,4 +1,5 @@
 dts-dirs += qcom
+dts-dirs += RMX1921
 subdir-y	:= $(dts-dirs)
 
 dtstree		:= $(srctree)/$(src)
