@@ -257,6 +257,8 @@
 		rt155_fdreplace_rt59_support;
                 report_point_first_support;
                 report_120hz_support;
+        glove_mode_support;
+
 		/*
 		 *Virtual Key Config:
 		 *1:touchpanel,button-type: <virtualkey_type  supportted_button-map>
