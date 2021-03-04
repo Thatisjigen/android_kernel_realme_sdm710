@@ -90,6 +90,9 @@ static char lcd_manu[FP_ID_MAX_LENGTH] = CHIP_UNKNOWN; /* the length of this str
 static struct fp_data *fp_data_ptr = NULL;
 char g_engineermode_menu_config[ENGINEER_MENU_SELECT_MAXLENTH] = ENGINEER_MENU_DEFAULT;
 
+extern int gf_opticalfp_irq_handler(struct fp_underscreen_info* tp_info);
+//extern int silfp_opticalfp_irq_handler(struct fp_underscreen_info *tp_info);
+
 static int fp_gpio_parse_parent_dts(struct fp_data *fp_data)
 {
     int ret = FP_OK;
@@ -195,6 +198,20 @@ static struct file_operations fp_id_node_ctrl = {
     .read = fp_id_node_read,
     .write = fp_id_node_write,
 };
+
+int opticalfp_irq_handler(struct fp_underscreen_info* tp_info)
+{
+    fp_vendor_t fpsensor_type = get_fpsensor_type();
+    if (FP_SILEAD_OPTICAL_70 == fpsensor_type) {
+        //return silfp_opticalfp_irq_handler(tp_info);
+        return FP_UNKNOWN;
+    } else if (FP_GOODIX_OPTICAL_95 == fpsensor_type) {
+        return gf_opticalfp_irq_handler(tp_info);
+    }
+    else {
+        return FP_UNKNOWN;
+    }
+}
 
 static int fp_gpio_parse_child_dts(struct fp_data *fp_data)
 {
@@ -463,6 +480,8 @@ static void __exit oppo_fp_common_exit(void)
 {
     platform_driver_unregister(&oppo_fp_common_driver);
 }
+
+EXPORT_SYMBOL(opticalfp_irq_handler);
 
 subsys_initcall(oppo_fp_common_init);
 module_exit(oppo_fp_common_exit)
