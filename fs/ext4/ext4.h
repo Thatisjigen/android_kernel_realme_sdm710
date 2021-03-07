@@ -2410,6 +2410,7 @@ static inline int ext4_fname_prepare_lookup(struct inode *dir,
 static inline void ext4_fname_free_filename(struct ext4_filename *fname) { }
 #endif /* !CONFIG_FS_ENCRYPTION */
 
+
 /* dir.c */
 extern int __ext4_check_dir_entry(const char *, unsigned int, struct inode *,
 				  struct file *,
