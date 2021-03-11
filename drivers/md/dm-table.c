@@ -1551,6 +1551,16 @@ static int queue_supports_inline_encryption(struct dm_target *ti,
 	return q && blk_queue_inlinecrypt(q);
 }
 
+static int queue_not_inline_encryption_capable(struct dm_target *ti,
+						struct dm_dev *dev,
+						sector_t start, sector_t len,
+						void *data)
+{
+	struct request_queue *q = bdev_get_queue(dev->bdev);
+
+	return q && !blk_queue_inlinecrypt(q);
+}
+
 static bool dm_table_all_devices_attribute(struct dm_table *t,
 					   iterate_devices_callout_fn func)
 {
@@ -1641,8 +1651,8 @@ static bool dm_table_supports_inlinecrypt(struct dm_table *t)
 		ti = dm_table_get_target(t, i++);
 
 		if (!ti->type->iterate_devices ||
-		    !ti->type->iterate_devices(ti,
-		    queue_supports_inline_encryption, NULL))
+		    ti->type->iterate_devices(ti,
+		    queue_not_inline_encryption_capable, NULL))
 			return false;
 	}
 	return true;
