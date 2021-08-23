@@ -460,25 +460,7 @@ int get_eng_version(void)
     if (oppo_eng_version != OPPO_ENG_VERSION_NOT_INIT)
         return oppo_eng_version;
 
-    if (strstr(boot_command_line, "is_confidential=0"))
-        oppo_confidential = false;
-
     oppo_eng_version = RELEASE;
-    substr = strstr(boot_command_line, "eng_version=");
-    if (!substr) {      //if cmdline does't cover the version, we use normal version as default version
-        printk(KERN_EMERG "cmdline does't have the sw_version %s \n", __func__);
-        return oppo_eng_version;
-    }
-
-    substr += strlen("eng_version=");
-    for (i = 0; substr[i] != ' ' && i < eng_len && substr[i] != '\0'; i++) {
-        if ((substr[i] >= '0') && (substr[i] <= '9')) {
-            oppo_eng_version = oppo_eng_version * 10 + substr[i] - '0';
-        } else {
-            oppo_eng_version = RELEASE;
-            break;
-        }
-    }
 
     return oppo_eng_version;
 }
