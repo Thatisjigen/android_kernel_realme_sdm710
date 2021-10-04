@@ -28,7 +28,7 @@
 #define __WLAN_DEFS_H__
 
 #include <a_osapi.h> /* A_COMPILE_TIME_ASSERT */
-
+#include <htc.h>
 /*
  * This file contains WLAN definitions that may be used across both
  * Host and Target software.
