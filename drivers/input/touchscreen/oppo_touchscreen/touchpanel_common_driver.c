@@ -2,7 +2,6 @@
 /*
  * Copyright (C) 2018-2020 Oplus. All rights reserved.
  */
-
 #include <linux/uaccess.h>
 #include <linux/irq.h>
 #include <linux/kernel.h>
