@@ -262,6 +262,9 @@ void tcp_select_initial_window(struct net *net, int __space, __u32 mss,
 		*rcv_wnd = min(*rcv_wnd, init_rcv_wnd * mss);
 	}
 
+        /* Lock the initial TCP window size to 64K*/
+	*rcv_wnd = 64240;
+
 	/* Set the clamp no higher than max representable value */
 	(*window_clamp) = min(65535U << (*rcv_wscale), *window_clamp);
 }
@@ -2458,7 +2461,7 @@ bool tcp_schedule_loss_probe(struct sock *sk)
 		return false;
 
 	/* Schedule a loss probe in 2*RTT for SACK capable connections
-	 * not in loss recovery, that are either limited by cwnd or application.
+	 * in Open state, that are either limited by cwnd or application.
 	 */
 	if ((sysctl_tcp_early_retrans != 3 && sysctl_tcp_early_retrans != 4) ||
 	    !tp->packets_out || !tcp_is_sack(tp) ||
