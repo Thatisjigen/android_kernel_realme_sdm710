@@ -770,8 +770,10 @@ ARCH_CFLAGS :=
 include arch/$(SRCARCH)/Makefile
 
 ifeq ($(cc-name),clang)
+OPT_FLAGS := -march=armv8.2-a+crypto+crc+nodotprod
+OPT_FLAGS += -mtune=cortex-a75
 ifdef CONFIG_LLVM_POLLY
-OPT_FLAGS := -mllvm -polly \
+OPT_FLAGS += -mllvm -polly \
 		   -mllvm -polly-run-dce \
 		   -mllvm -polly-run-inliner \
 		   -mllvm -polly-ast-use-context \
@@ -782,8 +784,9 @@ endif
 OPT_FLAGS += -O3 -march=armv8.2-a+crypto+crc -mtune=cortex-a75 \
 			-mcpu=cortex-a75+crypto+crc
 
-KBUILD_CFLAGS += $(OPT_FLAGS)
-KBUILD_AFLAGS += $(OPT_FLAGS)
+KBUILD_CFLAGS += -O3 $(OPT_FLAGS)
+KBUILD_AFLAGS += -O3 $(OPT_FLAGS)
+
 KBUILD_LDFLAGS += $(OPT_FLAGS)
 endif
 
