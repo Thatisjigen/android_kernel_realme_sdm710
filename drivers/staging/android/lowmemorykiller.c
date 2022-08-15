@@ -320,16 +320,7 @@ static int lmk_vmpressure_notifier(struct notifier_block *nb,
 			global_node_page_state(NR_SHMEM) -
 			total_swapcache_pages();
 		other_free = global_page_state(NR_FREE_PAGES);
-#ifdef OPLUS_FEATURE_LOWMEM_DBG
-/*		if (other_file < almk_totalram_threshold_pages * 6/5) {
-			atomic_set(&shift_adj, 1);
-		}*/
-		if ((other_free + other_file) <  totalram_pages/almk_totalram_ratio)
-			atomic_set(&shift_adj, 1);
-#else
 		atomic_set(&shift_adj, 1);
-#endif /*OPLUS_FEATURE_LOWMEM_DBG*/
-
 		trace_almk_vmpressure(pressure, other_free, other_file);
 	} else if (pressure >= 90) {
 		if (lowmem_adj_size < array_size)
