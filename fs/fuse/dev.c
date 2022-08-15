@@ -882,7 +882,7 @@ static int fuse_try_move_page(struct fuse_copy_state *cs, struct page **pagep)
 	struct page *newpage;
 	struct pipe_buffer *buf = cs->pipebufs;
 
-        get_page(oldpage);
+	get_page(oldpage);
 	err = unlock_request(cs->req);
 	if (err)
 		goto out_put_old;
@@ -958,10 +958,10 @@ static int fuse_try_move_page(struct fuse_copy_state *cs, struct page **pagep)
 	put_page(oldpage);
 	cs->len = 0;
 
-        err = 0;
+	err = 0;
 out_put_old:
-        /* Drop ref obtained in this function */
-        put_page(oldpage);
+	/* Drop ref obtained in this function */
+	put_page(oldpage);
 	return err;
 
 out_fallback_unlock:
@@ -972,7 +972,7 @@ out_fallback:
 
 	err = lock_request(cs->req);
 	if (!err)
-                err = 1;
+		err = 1;
 
 	goto out_put_old;
 }
