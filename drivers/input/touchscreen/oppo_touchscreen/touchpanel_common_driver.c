@@ -170,8 +170,6 @@ void operate_mode_switch(struct touchpanel_data *ts)
     }
 
     if (ts->is_suspended) {
-        infra_prox_far = true;
-        prox_near = true;
         if (ts->black_gesture_support || ts->fingerprint_underscreen_support) {
             if ((ts->gesture_enable & 0x01) == 1 || ts->fp_enable) {
                 if (ts->single_tap_support && ts->ts_ops->enable_single_tap) {
@@ -264,8 +262,6 @@ void operate_mode_switch(struct touchpanel_data *ts)
 
         ts->ts_ops->mode_switch(ts->chip_data, MODE_NORMAL, true);
 
-        infra_prox_far = false;
-        prox_near = false;
     }
 }
 
@@ -2090,16 +2086,28 @@ static ssize_t prox_mask_write(struct file *file, const char __user *user_buf, s
     infra_prox_far = !(!!value);
     TPD_INFO("%s was the value of infra proximity", infra_prox_far ? "Near": "Far");
 
-    if (infra_prox_far)
-        prox_near=infra_prox_far;
-    // send event & wait for any change
+
+    // Make sure the touchpanel is suspended before writing event node.
+    if(!(!!ts->fd_enable) && (infra_prox_far || !infra_prox_far)) {
+        TPD_INFO("proximity Bailing out, Suspend Status:%d, TP_PS:%d, INFRA_PS:%d", !!ts->is_suspended , !!ts->fd_enable, infra_prox_far);
+        return count;
+    }
+
+    prox_near=infra_prox_far;
+    //hold mutex & send event
+    mutex_lock(&ts->mutex);
     input_event(ts->ps_input_dev, EV_MSC, MSC_RAW, infra_prox_far);
     input_sync(ts->ps_input_dev);
-    while (infra_prox_far && !ambient_display_status()){
-        input_event(ts->ps_input_dev, EV_MSC, MSC_RAW, infra_prox_far && prox_near);
+    ktime_t start = ktime_get();
+    while (prox_near){
+        if (ktime_to_ns(ktime_sub(ktime_get(), start)) > 280*1000000000) {
+            mutex_unlock(&ts->mutex);
+            return count;
+        }
+        input_event(ts->ps_input_dev, EV_MSC, MSC_RAW, infra_prox_far);
         input_sync(ts->ps_input_dev);
     }
-        
+    mutex_unlock(&ts->mutex);
     return count;
 }
 
