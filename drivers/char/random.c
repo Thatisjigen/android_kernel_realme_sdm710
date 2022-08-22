@@ -1034,7 +1034,6 @@ static ssize_t extract_crng_user(void __user *buf, size_t nbytes)
 	return ret;
 }
 
-
 /*********************************************************************
  *
  * Entropy input management
